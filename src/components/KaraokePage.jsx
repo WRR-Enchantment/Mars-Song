@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaPlay, FaPause, FaMusic } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import songs from "../songs";
 
 export default function KaraokePage() {
@@ -9,6 +11,7 @@ export default function KaraokePage() {
   const [currentTime, setCurrentTime] = useState(0);
   const [manualScroll, setManualScroll] = useState(false);
   const [showSongList, setShowSongList] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const scrollTimeoutRef = useRef(null);
 
   const audioRef = useRef(null);
@@ -46,7 +49,6 @@ export default function KaraokePage() {
 
     return () => clearInterval(interval);
   }, [lyrics, manualScroll]);
-
   const handleScroll = () => {
     setManualScroll(true);
     clearTimeout(scrollTimeoutRef.current);
@@ -105,11 +107,63 @@ export default function KaraokePage() {
 
   return (
     <div className="min-h-screen relative bg-gradient-to-b from-black to-gray-900 text-white p-4 flex items-center justify-center">
-      {/* Logo kiri atas */}
+
+      {/* MENU STRIP 3 KIRI ATAS */}
+      <div className="fixed top-4 left-2 z-50">
+        <button
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label="Toggle menu"
+          className="p-2 rounded-md bg-white/90 text-black shadow-lg hover:bg-white/95 transition"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            viewBox="0 0 24 24"
+          >
+            {menuOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <>
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </>
+            )}
+          </svg>
+        </button>
+
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="mt-2 w-48 bg-white/90 text-black rounded-lg shadow-lg backdrop-blur-md border border-white/50"
+            >
+              <ul>
+                <li>
+                  <a
+                    href="https://padus-tajurhalang.vercel.app/"
+                    className="block w-full text-left px-4 py-2 hover:bg-yellow-300 transition"
+                  >
+                    Home
+                  </a>
+                </li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Logo pojok kiri atas */}
       <img
         src="/logo.png"
         alt="Logo Padus"
-        className="absolute top-4 left-4 w-12 h-12 object-contain z-50"
+        className="absolute top-4 left-14 w-12 h-12 object-contain z-40"
       />
 
       {/* Tombol pilih lagu kanan atas */}
@@ -122,7 +176,6 @@ export default function KaraokePage() {
           <FaMusic size={20} />
         </button>
 
-        {/* Daftar lagu (tanpa durasi) */}
         {showSongList && (
           <div className="mt-3 bg-white/10 backdrop-blur-md p-4 rounded-xl max-h-80 overflow-y-auto border border-white/20 w-64 shadow-lg">
             <h3 className="text-lg font-bold mb-2 text-white">Daftar Lagu</h3>
@@ -173,7 +226,7 @@ export default function KaraokePage() {
           ))}
         </div>
 
-        {/* Player control */}
+        {/* Kontrol audio */}
         <div className="flex items-center gap-4 p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
           <button
             onClick={togglePlay}
