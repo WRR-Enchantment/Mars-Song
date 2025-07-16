@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gradient-to-b from-black via-zinc-900 to-gray-800 text-white font-sans;
+}
+
+.lyric-line {
+  @apply text-lg text-gray-400 transition-colors duration-300;
+}
+
+.lyric-line.active {
+  @apply text-white text-2xl font-semibold;
+}
+
+.audio-player {
+  @apply fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-10 text-white px-4 py-2 rounded-full shadow-lg backdrop-blur;
+}
